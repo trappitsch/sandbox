@@ -1,0 +1,58 @@
+import { Button, SpinBox, StandardButton, TabWidget } from "std-widgets.slint";
+import { Counter } from "main_page.slint";
+import { DialogPage } from "dialog_page.slint";
+
+export component AppWindow inherits Window {
+
+    // Main page callbacks and properties
+    callback request-increase-value <=> main_page.request-increase-value;
+    in-out property counter <=> main_page.counter;
+    callback settings_window <=> main_page.settings_window;
+    callback settings_print <=> main_page.settings_print;
+
+    // Dialog page callbacks
+    callback message_dialog <=> dialog_page.message_dialog;
+    callback question_dialog <=> dialog_page.question_dialog;
+
+    width: 300px;
+    height: 200px;
+    TabWidget {
+        Tab {
+            title: "Main page";
+            main_page := Counter { }
+        }
+
+        Tab {
+            title: "Dialog page";
+            dialog_page := DialogPage { }
+        }
+    }
+}
+
+export component SettingsDialog inherits Dialog {
+    in-out property <int> settings_value;
+
+    title: "Settings";
+    width: 200px;
+    height: 75px;
+
+    HorizontalLayout {
+        Text {
+            text: "Some number:";
+        }
+
+        SpinBox {
+            value <=> root.settings_value;
+        }
+    }
+
+    StandardButton {
+        kind: ok;
+    }
+
+    StandardButton {
+        kind: cancel;
+    }
+}
+
+// Re-Export Dialogs
