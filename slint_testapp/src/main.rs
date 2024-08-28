@@ -36,11 +36,13 @@ fn main() -> Result<(), slint::PlatformError> {
 
     ui.on_settings_window({
         let sd_handle = settings_dialog.as_weak();
+        let dark_mode = ui.get_dark_mode();
         let my_settings = my_settings.clone();
         move || {
             let sd = sd_handle.unwrap();
-            sd.show().unwrap();
+            sd.set_dark_mode(dark_mode);
             sd.set_settings_value(my_settings.borrow().get_value());
+            sd.show().unwrap();
         }
     });
 
@@ -54,6 +56,7 @@ fn main() -> Result<(), slint::PlatformError> {
     // Settings dialog window
     settings_dialog.on_ok_clicked({
         let sd_handle = settings_dialog.as_weak();
+        let ui = ui.as_weak().unwrap();
         let my_settings = my_settings.clone();
         move || {
             let sd = sd_handle.unwrap();
@@ -61,6 +64,11 @@ fn main() -> Result<(), slint::PlatformError> {
             let mut mss = my_settings.borrow_mut();
             mss.set_value(sd.get_settings_value());
             println!("Settings dialog OK clicked");
+            // Get color scheme and set it to main window
+            let color_scheme = sd.get_dark_mode();
+            ui.set_dark_mode(color_scheme);
+            println!("UI: {:?}", ui.get_dark_mode());
+            ui.invoke_color_scheme();
         }
     });
 

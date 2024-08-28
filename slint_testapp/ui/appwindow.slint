@@ -1,8 +1,15 @@
-import { Button, SpinBox, StandardButton, TabWidget } from "std-widgets.slint";
+import { Button, Palette, SpinBox, StandardButton, Switch, TabWidget } from "std-widgets.slint";
 import { Counter } from "main_page.slint";
 import { DialogPage } from "dialog_page.slint";
 
 export component AppWindow inherits Window {
+
+    // Designs
+    in-out property <bool> dark_mode: false;
+    callback color_scheme;
+    color_scheme() => {
+        Palette.color-scheme = dark_mode ? ColorScheme.dark : ColorScheme.light;
+    }
 
     // Main page callbacks and properties
     callback request-increase-value <=> main_page.request-increase-value;
@@ -14,9 +21,19 @@ export component AppWindow inherits Window {
     callback message_dialog <=> dialog_page.message_dialog;
     callback question_dialog <=> dialog_page.question_dialog;
 
+
     width: 300px;
-    height: 200px;
+    height: 500px;
+    title: "App Window Title";
+    
+    init => { 
+        color_scheme();
+    }
+
+
+
     TabWidget {
+
         Tab {
             title: "Main page";
             main_page := Counter { }
@@ -31,10 +48,26 @@ export component AppWindow inherits Window {
 
 export component SettingsDialog inherits Dialog {
     in-out property <int> settings_value;
+    in-out property <bool> dark_mode: false;
+
+    init => {
+        Palette.color-scheme = dark_mode ? ColorScheme.dark : ColorScheme.light;
+    }
 
     title: "Settings";
-    width: 200px;
-    height: 75px;
+    preferred-width: 200px;
+    preferred-height: 125px;
+
+    VerticalLayout {
+    Switch {
+            horizontal-stretch: 0;
+            text: @tr("Dark Mode");
+            checked: Palette.color-scheme == ColorScheme.dark;
+            toggled => {                
+                Palette.color-scheme = self.checked ? ColorScheme.dark : ColorScheme.light;
+                dark_mode = self.checked;
+            }
+        }
 
     HorizontalLayout {
         Text {
@@ -45,6 +78,7 @@ export component SettingsDialog inherits Dialog {
             value <=> root.settings_value;
         }
     }
+        }
 
     StandardButton {
         kind: ok;

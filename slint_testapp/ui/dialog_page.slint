@@ -1,8 +1,9 @@
-import { Button } from "std-widgets.slint";
+import { Button, Palette } from "std-widgets.slint";
 
 export component DialogPage inherits Rectangle {
     callback message_dialog();
     callback question_dialog();
+
     VerticalLayout {
         Button {
             text: "Show message dialog";

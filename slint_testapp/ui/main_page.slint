@@ -1,10 +1,14 @@
 import { Button, VerticalBox } from "std-widgets.slint";
 
 export component Counter inherits Rectangle {
+
     in-out property <int> counter: 42;
     callback request-increase-value();
     callback settings_window();
     callback settings_print();
+
+    height: 500px;
+
     VerticalBox {
         Text {
             text: "Counter: \{root.counter}";
