@@ -1,0 +1,27 @@
+[project]
+name = "rust-python-test"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Reto Trappitsch", email = "reto@galactic-forensics.space" }
+]
+dependencies = []
+readme = "README.md"
+requires-python = ">= 3.11"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["maturin>=1.2,<2.0"]
+build-backend = "maturin"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.rye.scripts]
+l2c = { call = "rust_python_test:lst_to_crd" }
+
+[tool.maturin]
+python-source = "python"
+module-name = "rust_python_test._lowlevel"
+features = ["pyo3/extension-module"]
