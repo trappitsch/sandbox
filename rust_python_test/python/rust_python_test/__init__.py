@@ -28,7 +28,7 @@ def lst_to_crd() -> None:
         print(e)
 
 
-    
+    print(hello())
 
     print("Well, not much here yet")
 
