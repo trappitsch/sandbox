@@ -1,0 +1,5 @@
+build-and-upload:
+    # cargo create the .hex file to be uploaded
+    cargo objcopy --release -- -O ihex teensy4.hex
+    # upload via teensy-cli loader
+    teensy_loader_cli --mcu=imxrt1062 -wv teensy4.hex
