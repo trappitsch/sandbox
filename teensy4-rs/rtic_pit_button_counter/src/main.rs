@@ -18,7 +18,6 @@ mod app {
     use imxrt_log as logging;
     use teensy4_bsp as bsp;
 
-
     const GPT_CLOCK_SOURCE: gpt::ClockSource = gpt::ClockSource::PeripheralClock;
     const GPT_DIVIDER: u32 = 8;
 
@@ -58,17 +57,17 @@ mod app {
             ..
         } = my_board(cx.device);
 
-        let snvs::Snvs { low_power: snvs::LowPower {
-            mut core, srtc, ..
-            }, .. } = snvs::new(unsafe { ral::snvs::SNVS::instance() });
+        let snvs::Snvs {
+            low_power: snvs::LowPower { mut core, srtc, .. },
+            ..
+        } = snvs::new(unsafe { ral::snvs::SNVS::instance() });
         let srtc = srtc.enable_and_set(&mut core, 1600000000, 0);
 
         iomuxc::configure(
             &mut pins.p4,
             iomuxc::Config::zero()
                 .set_hysteresis(iomuxc::Hysteresis::Disabled)
-                .set_pull_keeper(Some(iomuxc::PullKeeper::Pullup100k))
-                
+                .set_pull_keeper(Some(iomuxc::PullKeeper::Pullup100k)),
         );
         let button = gpio4.input(pins.p4);
         gpio4.set_interrupt(&button, Some(gpio::Trigger::FallingEdge));
@@ -113,7 +112,6 @@ mod app {
 
     #[task(binds = GPIO4_COMBINED_0_15, shared = [counter, gpt], local = [button, debounce_cycles])]
     fn button_pressed(mut cx: button_pressed::Context) {
-
         // some complicated debounce routine...
         let mut debounce_active = false;
         cx.shared.gpt.lock(|gpt| {
