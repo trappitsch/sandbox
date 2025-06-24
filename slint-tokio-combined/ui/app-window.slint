@@ -1,0 +1,41 @@
+import { Button, HorizontalBox, VerticalBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    width: 400px;
+    height: 200px;
+    in-out property <int> counter: 42;
+    in-out property <bool> is-running: false;
+    callback request-increase-value();
+    callback start-async();
+    callback stop-async();
+    VerticalBox {
+        Text {
+            text: "Counter: \{root.counter}";
+        }
+
+        Button {
+            text: "Increase value";
+            clicked => {
+                root.request-increase-value();
+            }
+        }
+
+        HorizontalBox {
+            Button {
+                text: "Start";
+                enabled: !root.is-running;
+                clicked => {
+                    root.start-async();
+                }
+            }
+
+            Button {
+                text: "Stop";
+                enabled: root.is-running;
+                clicked => {
+                    root.stop-async();
+                }
+            }
+        }
+    }
+}
